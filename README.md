@@ -6,6 +6,6 @@ App Store support URL:
 
 https://longrange308.github.io/cof_ios/
 
-Questions: [michael.r.leaf@gmail.com](mailto:michael.r.leaf@gmail.com)
+Questions go through the form on that page. The address is not published there.
 
 Privacy policy: https://svthuh.github.io/course-of-fire-privacy/
