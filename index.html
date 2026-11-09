@@ -27,6 +27,7 @@
     margin-top: 16px; background: #0f172a; color: #fff; border: 0; border-radius: 8px;
     font: inherit; font-weight: 600; padding: 12px 18px; cursor: pointer;
   }
+  .hint { color: #64748b; font-size: 14px; margin: 4px 0 0; }
   .hp { position: absolute; left: -9999px; height: 0; width: 0; overflow: hidden; }
 </style>
 </head>
@@ -41,14 +42,13 @@
 
   <h2>Contact</h2>
   <p>Send a message with the form. Include your iPhone model, iOS version, and what you were doing when the problem happened.</p>
-  <form action="https://api.web3forms.com/submit" method="POST">
-    <input type="hidden" name="access_key" value="cc2727b1-7ecc-4510-b9ba-02e1c02a5692">
-    <input type="hidden" name="subject" value="Course of Fire support">
-    <input type="hidden" name="from_name" value="Course of Fire">
-    <input type="hidden" name="redirect" value="https://longrange308.github.io/cof_ios/thanks.html">
+  <form id="support" action="https://formsubmit.co/15b61bb4d0ec181e43a8f587e41b653a" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="_subject" value="Course of Fire support">
+    <input type="hidden" name="_next" value="https://longrange308.github.io/cof_ios/thanks.html">
+    <input type="hidden" name="_template" value="table">
     <div class="hp">
-      <label for="botcheck">Leave this empty</label>
-      <input type="checkbox" name="botcheck" id="botcheck" tabindex="-1" autocomplete="off">
+      <label for="honey">Leave this empty</label>
+      <input type="text" name="_honey" id="honey" tabindex="-1" autocomplete="off">
     </div>
     <label for="name">Name</label>
     <input id="name" type="text" name="name" required autocomplete="name">
@@ -58,8 +58,38 @@
     <input id="device" type="text" name="device" autocomplete="off">
     <label for="message">Message</label>
     <textarea id="message" name="message" required></textarea>
+    <label for="files">Attach files (optional)</label>
+    <input id="files" type="file" name="attachment" multiple accept=".png,.jpg,.jpeg,.heic,.webp,.pdf,.cof,.json,.txt,.csv,.zip,.mp4,.mov">
+    <p class="hint">Screenshots, .cof stage files, PDFs, a short screen recording or a .zip. Up to 10 MB in total.</p>
+    <p class="hint" id="filesize" role="status"></p>
+    <label for="link">Or a link to larger files (optional)</label>
+    <input id="link" type="url" name="files_link" autocomplete="off" placeholder="Google Drive, Dropbox or OneDrive share link">
     <button type="submit">Send</button>
   </form>
+  <script>
+    // FormSubmit accepts up to 10 MB of attachments per message; warn before sending more.
+    (function () {
+      var input = document.getElementById('files');
+      var status = document.getElementById('filesize');
+      var form = document.getElementById('support');
+      var limit = 10 * 1024 * 1024;
+      function total() {
+        var sum = 0;
+        for (var i = 0; i < input.files.length; i++) sum += input.files[i].size;
+        return sum;
+      }
+      input.addEventListener('change', function () {
+        var mb = (total() / 1024 / 1024).toFixed(1);
+        status.textContent = input.files.length ? input.files.length + ' file(s), ' + mb + ' MB' + (total() > limit ? ' — over the 10 MB limit. Use a link for larger files.' : '') : '';
+      });
+      form.addEventListener('submit', function (e) {
+        if (total() > limit) {
+          e.preventDefault();
+          status.textContent = 'The attachments add up to more than 10 MB. Remove some, or share them with a link instead.';
+        }
+      });
+    })();
+  </script>
 
   <h2>Microphone</h2>
   <p>The shot timer asks for microphone access so it can hear shots and record their times. Sound is analyzed on your iPhone only while the timer or the microphone test is running. Audio is not recorded, saved, or sent off the device.</p>
